@@ -1,14 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Header from './header';
+import HeaderCell from './headerCell';
+import Cell from './cell';
+
+import {Util} from '../utils/util.js';
 
 export default class Grid extends React.Component {
     render() {
+        let u = new Util('');
 
-        return <div>
-            <Header data={this.props.data}/>
-            <h2>we are here</h2>
-        </div>
+        let dates = u.DatesInInterval();
 
+        return (
+         <div className="divTable">
+                <div className="divTableBody">
+                    <HeaderCell data={dates}/>
+                    <Cell data={this.props.data}/>
+                </div>
+            </div>
+        )
     }
 }
