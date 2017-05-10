@@ -3,22 +3,19 @@
 class Util {
     constructor(start, end) {
 
-        this.start = start;
-        this.end = end;
+        this.start = this.props.start;
+        this.end = this.props.end;
+        console.log('start ' + this.start);
+        console.log('end ' +this.end);
     }
 
     DatesInInterval() {
 
-        var dates = [];
-        console.log('start util: ' + Date.parse(this.start));
-        console.log('end util: ' + Date.parse(this.end));
-
-        if (Date.parse(this.start)) {
-            dates.push(this.start);
+        let dates = [];
+        for (let i=this.start; i<= this.end; i++){
+            dates.push(i);
         }
-        if (Date.parse(this.end)) {
-            dates.push(this.end);
-        }
+     
         return dates;
     }
 }

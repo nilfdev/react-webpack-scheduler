@@ -12,37 +12,49 @@ class App extends React.Component {
 
         this.state = {
             requests: props.data,
-            _inputStart:new Date().toLocaleDateString(),
-            _inputEnd: new Date().toLocaleDateString()
+            _inputStart: 1,
+            _inputEnd: 5
         };
-       this.changeContent = this.changeContent.bind(this);
+       this.changeContentStart = this.changeContentStart.bind(this);
+       this.changeContentEnd = this.changeContentEnd.bind(this);
        this.onRefreshClickHandler = this.onRefreshClickHandler.bind(this);
     }
 
-   changeContent(e) {
-    console.log(e.target);
+   changeContentStart(e) {
+    console.log('change content st' +   e.target.value);
     this.setState({_inputStart: e.target.value})
   } 
 
+ changeContentEnd(e) {
+    console.log('change content end' +   e.target.value);
+    this.setState({_inputEnd: e.target.value})
+  } 
     onRefreshClickHandler(){
-        this.setState({_inputStart: this.state._inputStart});
-        this.setState({_inputEnd:  this.state._inputEnd});
+         this.setState({_inputStart: this.state._inputStart});
+         this.setState({_inputEnd:  this.state._inputEnd});
 
-        console.log(this.state._inputStart);
+        this.forceUpdate();
     }
+
+
     render() {
+            
+            console.log('app start: ' +  this.state._inputStart);
+            console.log('app end: ' +  this.state._inputEnd);
+
         if (!this.state.requests) {
             return <h1>No data found</h1>
         } else {
             return (
                 <div>
-                    start:<input type='text' onChange={this.changeContent} defaultValue = '2017-05-09' />
-                    end:<input type='text' ref='end'  defaultValue = '2017-05-09'/>
+                    start:<input type='text' onChange={this.changeContentStart} defaultValue = '1' />
+                    end:<input type='text' ref='end'  onChange={this.changeContentEnd} defaultValue = '5'/>
                     
                     <input type ='button' ref='action' value='refresh' onClick={this.onRefreshClickHandler}/>
 
                     <br/>
-                    <Grid data={this.state.requests} />
+                    <Grid start={this.state._inputStart} end= {this.state._inputEnd} />
+                    {/*<Grid start={this.state.requests} />*/}
                 </div>
                 )
             
