@@ -33,7 +33,7 @@ class App extends React.Component {
          this.setState({_inputStart: this.state._inputStart});
          this.setState({_inputEnd:  this.state._inputEnd});
 
-        this.forceUpdate();
+       // this.forceUpdate();
     }
 
 

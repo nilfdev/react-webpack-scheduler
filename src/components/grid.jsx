@@ -19,6 +19,13 @@ export default class Grid extends React.Component {
         console.log('grid end: ' + this.state.end);
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            start: nextProps.start,
+            end: nextProps.end
+        });
+    }
+
     render() {
 
         console.log('grid render start: ' + this.state.start);
