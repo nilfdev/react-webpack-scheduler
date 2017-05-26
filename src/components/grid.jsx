@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import HeaderCell from './headerCell';
-import Cell from './cell';
+import HeaderRow from './headerRow';
+import Row from './row';
 
-import {Util} from '../utils/util.js';
+import { Util } from '../utils/util.js';
 
 export default class Grid extends React.Component {
     constructor(props) {
@@ -14,9 +14,6 @@ export default class Grid extends React.Component {
             start: this.props.start,
             end: this.props.end
         }
-
-        console.log('grid start: ' + this.state.start);
-        console.log('grid end: ' + this.state.end);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -25,26 +22,44 @@ export default class Grid extends React.Component {
             end: nextProps.end
         });
     }
+    getDates(start, end) {
+        debugger;
+        let startDate = this.convertToDate(start);
+        let endDate = this.convertToDate(end);
 
-    render() {
+        let dates = new Array();
 
-        console.log('grid render start: ' + this.state.start);
-        console.log('grid render end: ' + this.state.end);
-        
-        const dates = new Array();
-        console.log('dates 1: ' + dates);
 
-        for (let i = this.state.start; i <= this.state.end; i++) {
-            console.log('i: ' + i);
-            dates.push(i);
+        while (startDate && endDate && startDate <= endDate) {
+            dates.push(startDate.toDateString("yyyy-mm-dd"));
+            startDate = this.addDays(startDate, 1);
         }
+        return dates
+    }
+    convertToDate(datestring) {
+        let date = new Date(datestring);
+        if (Object.prototype.toString.call(date) === '[object Date]') {
+            return date;
+        }
+        return null;
+    }
 
-        console.log('dates 2: ' + dates);
+    addDays(date, days) {
+        var result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+    }
+    render() {
+        const dates = this.getDates(this.state.start, this.state.end);
+        // for (let i = this.state.start; i <= this.state.end; i++) {
+        //     dates.push(i);
+        // }
 
         return (
             <div className="divTable">
                 <div className="divTableBody">
-                    <HeaderCell data={dates}/> {/*<Cell data={this.props.data} />*/}
+                    <HeaderRow data={dates} />
+                    <Row data={dates} />
                 </div>
             </div>
         )
