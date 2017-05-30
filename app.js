@@ -11,9 +11,10 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-            requests: props.data,
-            _inputStart: '2017-05-01',
-            _inputEnd: '2017-05-20'
+             requests: props.data, //TODO: DO NOT KNOW WHAT TO USE: props from component
+             teams: teams,         // or props from the page itself
+            _inputStart: startDate,
+            _inputEnd: endDate
         };
         this.changeContentStart = this.changeContentStart.bind(this);
         this.changeContentEnd = this.changeContentEnd.bind(this);
@@ -31,8 +32,8 @@ class App extends React.Component {
     }
 
     onRefreshClickHandler() {
-        this.setState({ _inputStart: this.state._inputStart });
-        this.setState({ _inputEnd: this.state._inputEnd });
+        // this.setState({ _inputStart: this.state._inputStart });
+        // this.setState({ _inputEnd: this.state._inputEnd });
     }
 
 
@@ -43,20 +44,33 @@ class App extends React.Component {
         } else {
             return (
                 <div>
-                    start:<input type='text' onChange={this.changeContentStart} defaultValue='2017-05-01' />
-                    end:<input type='text' ref='end' onChange={this.changeContentEnd} defaultValue='2017-05-20' />
-
-                    <input type='button' ref='action' value='refresh' onClick={this.onRefreshClickHandler} />
-
+                    start:<input type='text' onChange={this.changeContentStart} defaultValue={startDate} />
+                    end:<input type='text' ref='end' onChange={this.changeContentEnd} defaultValue={endDate} />
+                    <input type='button' ref='action' value='Redundatn refresh button' onClick={this.onRefreshClickHandler} />
                     <br />
-                    <Grid start={this.state._inputStart} end={this.state._inputEnd} />
-                    {/*<Grid start={this.state.requests} />*/}
+                    <Grid start={this.state._inputStart} end={this.state._inputEnd} teams = {this.state.teams} requests={this.state.requests} />
                 </div>
             )
 
         }
     }
 }
+
+let startDate = '2017-05-01';
+let endDate = '2017-05-21'
+
+const teams = [
+    {
+        id: '123',
+        name: 'Carbon',
+        members: ['Ilia', 'Dmytro', 'Alex']
+    },
+    {
+        id: '345',
+        name: 'Neon',
+        members: ['Mykola', 'Oleksandr', 'Vyacheslav']
+    }
+]
 
 const requests = [
     {
