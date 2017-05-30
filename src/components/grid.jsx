@@ -3,9 +3,6 @@ import ReactDOM from 'react-dom';
 
 import HeaderCell from './headerCell'
 import Cell from './cell'
-// import HeaderRow from './headerRow';
-// import Rows from './rows';
-
 import {Util} from '../utils/util.js';
 
 export default class Grid extends React.Component {
@@ -52,14 +49,24 @@ export default class Grid extends React.Component {
         result.setDate(result.getDate() + days);
         return result;
     }
-
+    //TODO: move it under control responsibility
+   isWeekend(date){
+         let day = new Date(date).getDay();
+         return day == 6 || day ==0;
+    }
     render() {
         const dates = this.getDates(this.state.start, this.state.end);
         let headerCells = [];
           headerCells.push( <HeaderCell key={'hdr_team'} text='Team'></HeaderCell>);
           headerCells.push( <HeaderCell key={'hdr_person'} text='Person'></HeaderCell>);
         for (let i=0; i<dates.length; i++) {
-            headerCells.push(<HeaderCell key={'hdr' + i} text={dates[i]}></HeaderCell>);
+            if (this.isWeekend(dates[i]))
+            {
+                //TODO: create separate control for text column and date column
+                headerCells.push(<HeaderCell key={'hdr' + i} text={'HOLIDAY' + dates[i]}></HeaderCell>);
+            } else {
+                headerCells.push(<HeaderCell key={'hdr' + i} text={dates[i]}></HeaderCell>);
+            }
         }
 
 
