@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-export default class Rows extends React.Component {
+export default class Row extends React.Component {
     constructor(props) {
         super(props);
         this.onCellClick = this.onCellClick.bind(this);

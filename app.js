@@ -1,6 +1,6 @@
 // import Container from './src/components/container.jsx';
 
-import World from './src/components/world';
+// import World from './src/components/world';
 import Grid from './src/components/grid';
 
 import React from 'react';
@@ -63,12 +63,12 @@ const teams = [
     {
         id: '123',
         name: 'Carbon',
-        members: ['Ilia', 'Dmytro', 'Alex']
+        members: ['Ilia', 'Dmytro', 'Alex', 'Yaroslav']
     },
     {
         id: '345',
         name: 'Neon',
-        members: ['Mykola', 'Oleksandr', 'Vyacheslav']
+        members: ['Mykola', 'Oleksandr', 'Vyacheslav', 'Max']
     }
 ]
 
