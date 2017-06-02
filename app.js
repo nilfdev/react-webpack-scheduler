@@ -46,7 +46,7 @@ class App extends React.Component {
                     start:<input type='text' onChange={this.changeContentStart} defaultValue={startDate} />
                     end:<input type='text' ref='end' onChange={this.changeContentEnd} defaultValue={endDate} />
                     <input type='button' ref='action' value='Redundatn refresh button' onClick={this.onRefreshClickHandler} />
-                    <br />
+                    
                     <DataTable start={this.state._inputStart} end={this.state._inputEnd} teams={this.state.teams} requests={this.state.requests} />
                 </div>
             )
@@ -74,15 +74,13 @@ const teams = [
 const requests = [
     {
         id: '1546468987987987',
-        user: 'user_a',
-        start: '2017-05-02',
-        end: '2017-05-03',
+        user: 'Ilia',
+        date: '2017-05-02',
         status: 'approved'
     }, {
         id: '278986564651787',
-        user: 'user_b',
-        start: '2017-05-03',
-        end: '2017-05-08',
+        user: 'Mykola',
+        date: '2017-05-03',
         status: 'created'
     }
 ];

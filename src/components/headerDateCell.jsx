@@ -29,14 +29,12 @@ export default class HeaderDateCell extends React.Component {
     render() {
         let date = this.convertToDate(this.props.val);
         if (!date) {
-            return '';
+            console.error("Invalid date");
+            return; 
         }
-        let className = "data-table__header-active";
-        if (this.isWeekend(date)) {
-            className = "data_table__header-weekend";
-        }
-
-        console.log(className);
+        
+         let className = this.isWeekend(date) ? "data_table__header-weekend" : "data-table__header-active";
+     
         return (
             <th className={className}>
                 {this.formatDate(date)}

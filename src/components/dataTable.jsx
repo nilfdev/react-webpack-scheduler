@@ -7,7 +7,7 @@ import HeaderTextCell from './headerTextCell';
 import TextCell from './textCell';
 import ClickableCell from './clickableCell';
 
-import {Util} from '../utils/util.js';
+import { Util } from '../utils/util.js';
 
 export default class DataTable extends React.Component {
 
@@ -29,6 +29,7 @@ export default class DataTable extends React.Component {
             end: nextProps.end
         });
     }
+
     getDates(start, end) {
         let startDate = this.convertToDate(start);
         let endDate = this.convertToDate(end);
@@ -36,10 +37,11 @@ export default class DataTable extends React.Component {
 
         while (startDate && endDate && startDate <= endDate) {
             startDate = this.addDays(startDate, 1);
-            dates.push(startDate.toDateString("yyyy-mm-dd"));
+            dates.push(startDate);
         }
         return dates
     }
+
     convertToDate(datestring) {
         let date = new Date(datestring);
         if (Object.prototype.toString.call(date) === '[object Date]') {
@@ -54,65 +56,74 @@ export default class DataTable extends React.Component {
         return result;
     }
 
+    getRequest(teamMember, date) {
+        let gridDate = new Date(date);
+
+        for (let i = 0; i < this.props.requests.length; i++) {
+
+            if (this.props.requests[i].user == teamMember) {
+                let requestDate = new Date(this.props.requests[i].date);
+                if (requestDate.getDate() == gridDate.getDate()) {
+                    return this.props.requests[i];
+                }
+            }
+        }
+        return null;
+    }
+
     render() {
         const dates = this.getDates(this.state.start, this.state.end);
         let headerCells = [];
-          headerCells.push( <HeaderTextCell key={'hdr_team'} val='Team'></HeaderTextCell>);
-          headerCells.push( <HeaderTextCell key={'hdr_person'} val='Person'></HeaderTextCell>);
-        for (let i=0; i<dates.length; i++) {
-            headerCells.push(<HeaderDateCell key={'hdr' + i} val={ dates[i] }></HeaderDateCell>);
+        headerCells.push(<HeaderTextCell key={'hdr_team'} val='Team'></HeaderTextCell>);
+        headerCells.push(<HeaderTextCell key={'hdr_person'} val='Person'></HeaderTextCell>);
+        for (let i = 0; i < dates.length; i++) {
+            headerCells.push(<HeaderDateCell key={'hdr' + i} val={dates[i]}></HeaderDateCell>);
         }
 
 
         let dataRows = [];
-          for (let [index, elem] of this.props.teams.entries()) {
+        for (let [index, elem] of this.props.teams.entries()) {
             let dataCells = [];
 
-            for(let[ind, el] of elem.members.entries()){
+            for (let [ind, el] of elem.members.entries()) {
                 let memberCells = [];
-                for (let i=0; i< dates.length; i++) {
-                    memberCells.push(<ClickableCell key={'mbmCell' + i} val='-'></ClickableCell>);
+                for (let i = 0; i < dates.length; i++) {
+                    memberCells.push(<ClickableCell key={'mbmCell' + i} val='*' request={this.getRequest(el, dates[i])}></ClickableCell>);
                 }
 
-                if (ind == 0){
+                if (ind == 0) {
                     dataCells.push(
-                    <tr>
-                        <TextCell key={'tm' + index} val ={elem.name} rowSpan={elem.members.length }></TextCell>
-                        <TextCell key={'mbr' + ind} val ={el} rowSpan='1'></TextCell>
-                        {memberCells}
-                    </tr>);
+                        <tr>
+                            <TextCell key={'tm' + index} val={elem.name} rowSpan={elem.members.length}></TextCell>
+                            <TextCell key={'mbr' + ind} val={el} rowSpan='1'></TextCell>
+                            {memberCells}
+                        </tr>);
                 } else {
                     dataCells.push(
-                    <tr>
-                        <TextCell key={'mbr' +ind} val ={el} rowSpan='1'></TextCell>
-                        {memberCells}
-                    </tr>);
+                        <tr>
+                            <TextCell key={'mbr' + ind} val={el} rowSpan='1'></TextCell>
+                            {memberCells}
+                        </tr>);
                 }
             }
-            
+
             dataRows.push(dataCells);
         }
 
-     
+
 
         return (
-        /*<div className="divTable">
-                <div className="divTableBody">
-                    <HeaderRow dates={dates} />
-                    <Rows dates={dates} teams= {this.state.teams} requests={this.state.requests} />
-                </div>
-            </div>*/ 
             <table className="data-table">
                 <thead>
                     <tr>
-                       {headerCells}
-                   </tr>
+                        {headerCells}
+                    </tr>
                 </thead>
-                    <tbody>
-                        {dataRows}
-                    </tbody>
+                <tbody>
+                    {dataRows}
+                </tbody>
             </table>
-            )
+        )
     }
 
 }
