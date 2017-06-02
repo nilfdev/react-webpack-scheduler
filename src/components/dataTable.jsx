@@ -1,11 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import HeaderCell from './headerCell'
-import Cell from './cell'
+import HeaderDateCell from './headerDateCell';
+import HeaderTextCell from './headerTextCell';
+
+import TextCell from './textCell';
+import ClickableCell from './clickableCell';
+
 import {Util} from '../utils/util.js';
 
-export default class Grid extends React.Component {
+export default class DataTable extends React.Component {
 
     constructor(props) {
         super(props);
@@ -31,8 +35,8 @@ export default class Grid extends React.Component {
         let dates = new Array();
 
         while (startDate && endDate && startDate <= endDate) {
-            dates.push(startDate.toDateString("yyyy-mm-dd"));
             startDate = this.addDays(startDate, 1);
+            dates.push(startDate.toDateString("yyyy-mm-dd"));
         }
         return dates
     }
@@ -49,48 +53,38 @@ export default class Grid extends React.Component {
         result.setDate(result.getDate() + days);
         return result;
     }
-    //TODO: move it under control responsibility
-   isWeekend(date){
-         let day = new Date(date).getDay();
-         return day == 6 || day ==0;
-    }
+
     render() {
         const dates = this.getDates(this.state.start, this.state.end);
         let headerCells = [];
-          headerCells.push( <HeaderCell key={'hdr_team'} text='Team'></HeaderCell>);
-          headerCells.push( <HeaderCell key={'hdr_person'} text='Person'></HeaderCell>);
+          headerCells.push( <HeaderTextCell key={'hdr_team'} val='Team'></HeaderTextCell>);
+          headerCells.push( <HeaderTextCell key={'hdr_person'} val='Person'></HeaderTextCell>);
         for (let i=0; i<dates.length; i++) {
-            if (this.isWeekend(dates[i]))
-            {
-                //TODO: create separate control for text column and date column
-                headerCells.push(<HeaderCell key={'hdr' + i} text={'HOLIDAY' + dates[i]}></HeaderCell>);
-            } else {
-                headerCells.push(<HeaderCell key={'hdr' + i} text={dates[i]}></HeaderCell>);
-            }
+            headerCells.push(<HeaderDateCell key={'hdr' + i} val={ dates[i] }></HeaderDateCell>);
         }
 
 
         let dataRows = [];
           for (let [index, elem] of this.props.teams.entries()) {
             let dataCells = [];
-            for(let[ind, el] of elem.members.entries()){
 
+            for(let[ind, el] of elem.members.entries()){
                 let memberCells = [];
                 for (let i=0; i< dates.length; i++) {
-                    memberCells.push(<Cell key={'mbmCell' + i} text='-'></Cell>);
+                    memberCells.push(<ClickableCell key={'mbmCell' + i} val='-'></ClickableCell>);
                 }
 
                 if (ind == 0){
                     dataCells.push(
                     <tr>
-                        <Cell key={'tm' + index} text ={elem.name} rowSpan={elem.members.length }></Cell>
-                        <Cell key={'mbr' + ind} text ={el} rowSpan='1'></Cell>
+                        <TextCell key={'tm' + index} val ={elem.name} rowSpan={elem.members.length }></TextCell>
+                        <TextCell key={'mbr' + ind} val ={el} rowSpan='1'></TextCell>
                         {memberCells}
                     </tr>);
                 } else {
                     dataCells.push(
                     <tr>
-                        <Cell key={'mbr' +ind} text ={el} rowSpan='1'></Cell>
+                        <TextCell key={'mbr' +ind} val ={el} rowSpan='1'></TextCell>
                         {memberCells}
                     </tr>);
                 }
@@ -129,7 +123,7 @@ const validate = (props, propName, componentName) => {
     }
 };
 
-Grid.propTypes = {
+DataTable.propTypes = {
     requests: (props, propName, componentName) => {
         if (props[propName].length < 1) {
             console.log('Array is empty: ' + propName);

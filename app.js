@@ -1,7 +1,6 @@
 // import Container from './src/components/container.jsx';
 
-// import World from './src/components/world';
-import Grid from './src/components/grid';
+import DataTable from './src/components/dataTable';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -11,8 +10,8 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-             requests: props.data, //TODO: DO NOT KNOW WHAT TO USE: props from component
-             teams: teams,         // or props from the page itself
+            requests: props.data, //TODO: DO NOT KNOW WHAT TO USE: props from component
+            teams: teams,         // or props from the page itself
             _inputStart: startDate,
             _inputEnd: endDate
         };
@@ -48,7 +47,7 @@ class App extends React.Component {
                     end:<input type='text' ref='end' onChange={this.changeContentEnd} defaultValue={endDate} />
                     <input type='button' ref='action' value='Redundatn refresh button' onClick={this.onRefreshClickHandler} />
                     <br />
-                    <Grid start={this.state._inputStart} end={this.state._inputEnd} teams = {this.state.teams} requests={this.state.requests} />
+                    <DataTable start={this.state._inputStart} end={this.state._inputEnd} teams={this.state.teams} requests={this.state.requests} />
                 </div>
             )
 
@@ -63,12 +62,12 @@ const teams = [
     {
         id: '123',
         name: 'Carbon',
-        members: ['Ilia', 'Dmytro', 'Alex', 'Yaroslav']
+        members: ['Ilia', 'Dmytro', 'Alex']
     },
     {
         id: '345',
         name: 'Neon',
-        members: ['Mykola', 'Oleksandr', 'Vyacheslav', 'Max']
+        members: ['Mykola', 'Oleksandr', 'Vyacheslav']
     }
 ]
 
