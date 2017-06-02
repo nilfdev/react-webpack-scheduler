@@ -5,6 +5,9 @@ import DataTable from './src/components/dataTable';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import DayPicker from "react-day-picker";
+
+
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -13,11 +16,17 @@ class App extends React.Component {
             requests: props.data, //TODO: DO NOT KNOW WHAT TO USE: props from component
             teams: teams,         // or props from the page itself
             _inputStart: startDate,
-            _inputEnd: endDate
+            _inputEnd: endDate,
+            selectedDay: undefined
         };
         this.changeContentStart = this.changeContentStart.bind(this);
         this.changeContentEnd = this.changeContentEnd.bind(this);
         this.onRefreshClickHandler = this.onRefreshClickHandler.bind(this);
+        this.handleDayClick = this.handleDayClick.bind(this);
+    }
+
+    handleDayClick (day,selected){
+        this.setState({selectedDay: selected ? undefined : day});
     }
 
     changeContentStart(e) {
@@ -46,7 +55,14 @@ class App extends React.Component {
                     start:<input type='text' onChange={this.changeContentStart} defaultValue={startDate} />
                     end:<input type='text' ref='end' onChange={this.changeContentEnd} defaultValue={endDate} />
                     <input type='button' ref='action' value='Redundatn refresh button' onClick={this.onRefreshClickHandler} />
-                    
+
+                    <div style= {{position: 'absolute', backgroundColor: 'white'}}>
+                     <DayPicker
+                        disabledDays={{ daysOfWeek: [0] }}
+                        selectedDays={this.state.selectedDay}
+                        onDayClick={this.handleDayClick}
+                    />
+                    </div>
                     <DataTable start={this.state._inputStart} end={this.state._inputEnd} teams={this.state.teams} requests={this.state.requests} />
                 </div>
             )
