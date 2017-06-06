@@ -7,7 +7,7 @@ import HeaderTextCell from './headerTextCell';
 import TextCell from './textCell';
 import ClickableCell from './clickableCell';
 
-import { Util } from '../utils/util.js';
+import {Util} from '../utils/util.js';
 
 export default class DataTable extends React.Component {
 
@@ -36,8 +36,9 @@ export default class DataTable extends React.Component {
         let dates = new Array();
 
         while (startDate && endDate && startDate <= endDate) {
-            startDate = this.addDays(startDate, 1);
+
             dates.push(startDate);
+            startDate = this.addDays(startDate, 1);
         }
         return dates
     }
@@ -74,21 +75,33 @@ export default class DataTable extends React.Component {
     render() {
         const dates = this.getDates(this.state.start, this.state.end);
         let headerCells = [];
-        headerCells.push(<HeaderTextCell key={'hdr_team'} val='Team'></HeaderTextCell>);
-        headerCells.push(<HeaderTextCell key={'hdr_person'} val='Person'></HeaderTextCell>);
+        headerCells.push(
+            <HeaderTextCell key={'hdr_team'} val='Team'></HeaderTextCell>
+        );
+        headerCells.push(
+            <HeaderTextCell key={'hdr_person'} val='Person'></HeaderTextCell>
+        );
         for (let i = 0; i < dates.length; i++) {
-            headerCells.push(<HeaderDateCell key={'hdr' + i} val={dates[i]}></HeaderDateCell>);
+            headerCells.push(
+                <HeaderDateCell key={'hdr' + i} val={dates[i]}></HeaderDateCell>
+            );
         }
 
-
         let dataRows = [];
-        for (let [index, elem] of this.props.teams.entries()) {
+        for (let [index,
+            elem]of this.props.teams.entries()) {
             let dataCells = [];
 
-            for (let [ind, el] of elem.members.entries()) {
+            for (let [ind,
+                el]of elem.members.entries()) {
                 let memberCells = [];
                 for (let i = 0; i < dates.length; i++) {
-                    memberCells.push(<ClickableCell key={'mbmCell' + i} val='*' request={this.getRequest(el, dates[i])}></ClickableCell>);
+                    memberCells.push(
+                        <ClickableCell
+                            key={'mbmCell' + i}
+                            val='*'
+                            request={this.getRequest(el, dates[i])}></ClickableCell>
+                    );
                 }
 
                 if (ind == 0) {
@@ -97,20 +110,20 @@ export default class DataTable extends React.Component {
                             <TextCell key={'tm' + index} val={elem.name} rowSpan={elem.members.length}></TextCell>
                             <TextCell key={'mbr' + ind} val={el} rowSpan='1'></TextCell>
                             {memberCells}
-                        </tr>);
+                        </tr>
+                    );
                 } else {
                     dataCells.push(
                         <tr>
                             <TextCell key={'mbr' + ind} val={el} rowSpan='1'></TextCell>
                             {memberCells}
-                        </tr>);
+                        </tr>
+                    );
                 }
             }
 
             dataRows.push(dataCells);
         }
-
-
 
         return (
             <table className="data-table">
