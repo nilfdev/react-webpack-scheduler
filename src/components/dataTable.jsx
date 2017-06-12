@@ -28,11 +28,16 @@ export default class DataTable extends React.Component {
             requests: nextProps.requests, 
             teams: nextProps.teams, //TODO: probably teams is static array we don't need to refresh all the time
             start: nextProps.start,
-            end: nextProps.end
+            end: nextProps.end,
+            team: nextProps.team
         });
+
     }
   
     render() {
+        let filteredTeams = this.props.teams.filter(team =>  team.name == this.props.team || !this.props.team);
+        
+        
         const dates = getDatesBetween(this.state.start, this.state.end);
         let headerCells = [];
         headerCells.push(<HeaderTextCell key={'hdr_team'} val='Team'></HeaderTextCell>);
@@ -42,7 +47,7 @@ export default class DataTable extends React.Component {
         }
 
         let rows = [];
-        for (let [t, team] of this.props.teams.entries()) {
+        for (let [t, team] of filteredTeams.entries()) {
             let dataCells = [];
             
             for (let [m, member] of team.members.entries()) {
