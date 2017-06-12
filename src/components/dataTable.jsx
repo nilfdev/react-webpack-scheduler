@@ -7,6 +7,7 @@ import {TextCell} from './textCell';
 import ClickableCell from './clickableCell';
 
 import { getDatesBetween } from '../dateServices';
+import { getRequest } from '../requestServices';
 
 
 export default class DataTable extends React.Component {
@@ -30,23 +31,7 @@ export default class DataTable extends React.Component {
             end: nextProps.end
         });
     }
-
-
-    getRequest(teamMember, date) {
-        let gridDate = new Date(date);
-
-        for (let i = 0; i < this.props.requests.length; i++) {
-
-            if (this.props.requests[i].user == teamMember) {
-                let requestDate = new Date(this.props.requests[i].date);
-                if (requestDate.getDate() == gridDate.getDate()) {
-                    return this.props.requests[i];
-                }
-            }
-        }
-        return null;
-    }
-
+  
     render() {
         const dates = getDatesBetween(this.state.start, this.state.end);
         let headerCells = [];
@@ -63,7 +48,7 @@ export default class DataTable extends React.Component {
             for (let [m, member] of team.members.entries()) {
                 let memberCells = [];
                 for (let i = 0; i < dates.length; i++) {
-                    memberCells.push(<ClickableCell key={'mbmCell' + i} val='*' request={this.getRequest(member, dates[i])}></ClickableCell>);
+                    memberCells.push(<ClickableCell key={'mbmCell' + i} val='*' request={getRequest(this.props.requests, member, dates[i])}></ClickableCell>);
                 }
 
                 if (m == 0) {
