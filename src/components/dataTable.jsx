@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import HeaderDateCell from './headerDateCell';
-import HeaderTextCell from './headerTextCell';
-
-import TextCell from './textCell';
+import {HeaderDateCell} from './headerDateCell';
+import {HeaderTextCell } from './headerTextCell';
+import {TextCell} from './textCell';
 import ClickableCell from './clickableCell';
 
-import { PeriodService } from '../services/periodService';
+import { getDatesBetween } from '../dateServices';
+
 
 export default class DataTable extends React.Component {
 
@@ -48,7 +48,7 @@ export default class DataTable extends React.Component {
     }
 
     render() {
-        const dates = PeriodService.getDates(this.state.start, this.state.end);
+        const dates = getDatesBetween(this.state.start, this.state.end);
         let headerCells = [];
         headerCells.push(<HeaderTextCell key={'hdr_team'} val='Team'></HeaderTextCell>);
         headerCells.push(<HeaderTextCell key={'hdr_person'} val='Person'></HeaderTextCell>);

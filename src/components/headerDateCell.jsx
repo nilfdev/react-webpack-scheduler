@@ -1,22 +1,17 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { DateService } from '../services/dateService';
+import * as dateService from '../dateServices'
 
-
-export default class HeaderDateCell extends React.Component {
-    render() {
-        let date = DateService.toDate(this.props.val);
-        if (!date) {
-            console.error("Invalid date");
-            return;
-        }
-
-        let className = DateService.isWeekend(date)
-            ? "data_table__header-weekend"
-            : "data-table__header-active";
-
-        return (
-            <th className={className}>{DateService.format(date)}</th>
-        )
+export const HeaderDateCell = ({ val }) => {
+    let date = dateService.toDate(val);
+    if (!date) {
+        console.error("Invalid date");
+        return '';
     }
+    
+    let className = dateService.isWeekend(date)
+        ? "data_table__header-weekend"
+        : "data-table__header-active";
+
+    return <th className={className}>{dateService.format(date)}</th>
 }
