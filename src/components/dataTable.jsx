@@ -7,7 +7,7 @@ import HeaderTextCell from './headerTextCell';
 import TextCell from './textCell';
 import ClickableCell from './clickableCell';
 
-import {Util} from '../utils/util.js';
+import { PeriodService } from '../services/periodService';
 
 export default class DataTable extends React.Component {
 
@@ -24,38 +24,13 @@ export default class DataTable extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            requests: nextProps.requests, teams: nextProps.teams, //TODO: probably teams is static array we don't need to refresh all the time
+            requests: nextProps.requests, 
+            teams: nextProps.teams, //TODO: probably teams is static array we don't need to refresh all the time
             start: nextProps.start,
             end: nextProps.end
         });
     }
 
-    getDates(start, end) {
-        let startDate = this.convertToDate(start);
-        let endDate = this.convertToDate(end);
-        let dates = new Array();
-
-        while (startDate && endDate && startDate <= endDate) {
-
-            dates.push(startDate);
-            startDate = this.addDays(startDate, 1);
-        }
-        return dates
-    }
-
-    convertToDate(datestring) {
-        let date = new Date(datestring);
-        if (Object.prototype.toString.call(date) === '[object Date]') {
-            return date;
-        }
-        return null;
-    }
-
-    addDays(date, days) {
-        var result = new Date(date);
-        result.setDate(result.getDate() + days);
-        return result;
-    }
 
     getRequest(teamMember, date) {
         let gridDate = new Date(date);
@@ -73,58 +48,43 @@ export default class DataTable extends React.Component {
     }
 
     render() {
-        const dates = this.getDates(this.state.start, this.state.end);
+        const dates = PeriodService.getDates(this.state.start, this.state.end);
         let headerCells = [];
-        headerCells.push(
-            <HeaderTextCell key={'hdr_team'} val='Team'></HeaderTextCell>
-        );
-        headerCells.push(
-            <HeaderTextCell key={'hdr_person'} val='Person'></HeaderTextCell>
-        );
+        headerCells.push(<HeaderTextCell key={'hdr_team'} val='Team'></HeaderTextCell>);
+        headerCells.push(<HeaderTextCell key={'hdr_person'} val='Person'></HeaderTextCell>);
         for (let i = 0; i < dates.length; i++) {
-            headerCells.push(
-                <HeaderDateCell key={'hdr' + i} val={dates[i]}></HeaderDateCell>
-            );
+            headerCells.push(<HeaderDateCell key={'hdr' + i} val={dates[i]}></HeaderDateCell>);
         }
 
-        let dataRows = [];
-        for (let [index,
-            elem]of this.props.teams.entries()) {
+        let rows = [];
+        for (let [t, team] of this.props.teams.entries()) {
             let dataCells = [];
-
-            for (let [ind,
-                el]of elem.members.entries()) {
+            
+            for (let [m, member] of team.members.entries()) {
                 let memberCells = [];
                 for (let i = 0; i < dates.length; i++) {
-                    memberCells.push(
-                        <ClickableCell
-                            key={'mbmCell' + i}
-                            val='*'
-                            request={this.getRequest(el, dates[i])}></ClickableCell>
-                    );
+                    memberCells.push(<ClickableCell key={'mbmCell' + i} val='*' request={this.getRequest(member, dates[i])}></ClickableCell>);
                 }
 
-                if (ind == 0) {
+                if (m == 0) {
                     dataCells.push(
                         <tr>
-                            <TextCell key={'tm' + index} val={elem.name} rowSpan={elem.members.length}></TextCell>
-                            <TextCell key={'mbr' + ind} val={el} rowSpan='1'></TextCell>
+                            <TextCell key={'tm' + t} val={team.name} rowSpan={team.members.length}></TextCell>
+                            <TextCell key={'mbr' + m} val={member} rowSpan='1'></TextCell>
                             {memberCells}
                         </tr>
                     );
                 } else {
                     dataCells.push(
                         <tr>
-                            <TextCell key={'mbr' + ind} val={el} rowSpan='1'></TextCell>
+                            <TextCell key={'mbr' + m} val={member} rowSpan='1'></TextCell>
                             {memberCells}
                         </tr>
                     );
                 }
             }
-
-            dataRows.push(dataCells);
+            rows.push(dataCells);
         }
-
         return (
             <table className="data-table">
                 <thead>
@@ -133,7 +93,7 @@ export default class DataTable extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {dataRows}
+                    {rows}
                 </tbody>
             </table>
         )

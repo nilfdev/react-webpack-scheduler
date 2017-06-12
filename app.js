@@ -1,5 +1,3 @@
-// import Container from './src/components/container.jsx';
-
 import DataTable from './src/components/dataTable';
 
 import React from 'react';
@@ -31,10 +29,8 @@ class App extends React.Component {
         console.log('change content end' + e.target.value);
         this.setState({ _inputEnd: e.target.value })
     }
-
     onRefreshClickHandler() {
-        // this.setState({ _inputStart: this.state._inputStart });
-        // this.setState({ _inputEnd: this.state._inputEnd });
+
     }
 
 
@@ -47,7 +43,6 @@ class App extends React.Component {
                 <div>
                     start:<input type='text' onChange={this.changeContentStart} defaultValue={startDate} />
                     end:<input type='text' ref='end' onChange={this.changeContentEnd} defaultValue={endDate} />
-                    <input type='button' ref='action' value='Redundatn refresh button' onClick={this.onRefreshClickHandler} />
                     <DataTable start={this.state._inputStart} end={this.state._inputEnd} teams={this.state.teams} requests={this.state.requests} />
                 </div>
             )
