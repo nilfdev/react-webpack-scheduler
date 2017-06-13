@@ -28,13 +28,16 @@ class App extends React.Component {
         console.log('component did mount. Start request');
 
          request
-            .post('http://127.0.0.1:5000/api/db')
+            .post('http://127.0.0.1:5984/teams/_all_docs?include_docs=true')
             .send({message: this.state.message})
             .accept('application/json')
-            .withCredentials()
+          // .withCredentials()
             .end(function(err, res){
             if(err) throw err;
-            self.setState({ r: res.body.message });
+        
+           // self.setState({ r: res.body.message });
+           //debugger;
+            console.log(res.body.rows);
         });
     }
 
