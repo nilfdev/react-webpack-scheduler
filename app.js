@@ -3,6 +3,7 @@ import Filter from './src/components/filter';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import request from 'superagent';
 
 class App extends React.Component {
     constructor(props) {
@@ -11,33 +12,44 @@ class App extends React.Component {
         this.state = {
             requests: props.data, //TODO: DO NOT KNOW WHAT TO USE: props from component
             teams: teams,         // or props from the page itself
-            _inputStart: startDate,
-            _inputEnd: endDate,
+            start: startDate,
+            end: endDate,
             team: ''
         };
-        this.changeContentStart = this.changeContentStart.bind(this);
-        this.changeContentEnd = this.changeContentEnd.bind(this);
-        this.onChangeContentTeam = this.onChangeContentTeam.bind(this);
+        this.onChangeStart = this.onChangeStart.bind(this);
+        this.onChangeEnd = this.onChangeEnd.bind(this);
+        this.onChangeTeam = this.onChangeTeam.bind(this);
 
-
+        this.componentDidMount = this.componentDidMount.bind(this);
         this.onRefreshClickHandler = this.onRefreshClickHandler.bind(this);
     }
 
+    componentDidMount(){
+        console.log('component did mount. Start request');
 
-    changeContentStart(e) {
-        console.log('change content st' + e.target.value);
-        this.setState({ _inputStart: e.target.value })
+         request
+            .post('http://127.0.0.1:5000/api/db')
+            .send({message: this.state.message})
+            .accept('application/json')
+            .withCredentials()
+            .end(function(err, res){
+            if(err) throw err;
+            self.setState({ r: res.body.message });
+        });
     }
 
-    changeContentEnd(e) {
-        console.log('change content end' + e.target.value);
-        this.setState({ _inputEnd: e.target.value })
+    onChangeStart(e) {
+        this.setState({ start: e.target.value })
     }
+
+    onChangeEnd(e) {
+        this.setState({ end: e.target.value })
+    }
+
     onRefreshClickHandler() {
-
     }
 
-    onChangeContentTeam(val) {
+    onChangeTeam(val) {
         this.setState({ team: val});
     }
 
@@ -48,10 +60,10 @@ class App extends React.Component {
         } else {
             return (
                 <div>
-                    start:<input type='text' onChange={this.changeContentStart} defaultValue={startDate} />
-                    end:<input type='text' onChange={this.changeContentEnd} defaultValue={endDate} />
-                    <Filter handleChange={this.onChangeContentTeam} teams={this.state.teams} />
-                    <DataTable start={this.state._inputStart} end={this.state._inputEnd} team={this.state.team} teams={this.state.teams} requests={this.state.requests} />
+                    start:<input type='text' onChange={this.changeStart} defaultValue={startDate} />
+                    end:<input type='text' onChange={this.changeEnd} defaultValue={endDate} />
+                    <Filter handleChange={this.onChangeTeam} teams={this.state.teams} />
+                    <DataTable start={this.state.start} end={this.state.end} team={this.state.team} teams={this.state.teams} requests={this.state.requests} />
                 </div>
             )
 
@@ -66,30 +78,54 @@ let endDate = '2017-05-21';
 
 var teams = [
     {
-        id: '123',
-        name: 'Carbon',
-        members: ['Ilia', 'Dmytro', 'Alex']
+        id: "123",
+        name: "Carbon",
+        members: ["Ilia", "Dmytro", "Alex"]
     },
     {
-        id: '345',
-        name: 'Neon',
-        members: ['Mykola', 'Oleksandr', 'Vyacheslav']
+        id: "345",
+        name: "Neon",
+        members: ["Mykola", "Oleksandr", "Vyacheslav"]
     }
 ]
 
 const requests = [
     {
-        id: '1546468987987987',
-        user: 'Ilia',
-        date: '2017-05-02',
-        status: 'approved'
+        id: "1546468987987987",
+        user: "Ilia",
+        date: "2017-05-02",
+        status: "approved"
     }, {
-        id: '278986564651787',
-        user: 'Mykola',
-        date: '2017-05-03',
-        status: 'created'
+        id: "278986564651787",
+        user: "Mykola",
+        date: "2017-05-03",
+        status: "created"
     }
 ];
 
 ReactDOM.render(
     <App data={requests} />, document.getElementById('container'));
+
+/*
+ {
+        id: "123",
+        name: "Carbon",
+        members: ["Ilia", "Dmytro", "Alex"]
+ }
+
+http://127.0.0.1:5984/vacation/_design/designRequest/_view/request-view?startkey="2017/05/01"&endkey="2017/05/02"
+
+function (doc) {
+  if (doc.user && doc.date){
+    emit(doc.date,{user: doc.user,status: doc.status});
+  }
+}
+
+function (doc) {
+  var member; 
+  if (doc.name && doc.members){
+      emit(doc.name, doc.members);
+  }
+}
+http://127.0.0.1:5984/vacation/_design/teamView/_view/team-view
+ */
