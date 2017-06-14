@@ -1,5 +1,6 @@
 import DataTable from './src/components/dataTable';
 import Filter from './src/components/filter';
+import Confirmation from './src/components/confirmation';
 import {parseTeams, parseRequests} from './src/parsers'
 import {formatParam} from './src/dateServices'
 
@@ -16,14 +17,15 @@ class App extends React.Component {
             start: startDate,
             end: endDate,
             teams: [],         // or props from the page itself
-            team: ''
+            team: '',
+            pending: []
         };
         this.onChangeStart = this.onChangeStart.bind(this);
         this.onChangeEnd = this.onChangeEnd.bind(this);
         this.onChangeTeam = this.onChangeTeam.bind(this);
+        this.onClickDate = this.onClickDate.bind(this);
 
         this.componentDidMount = this.componentDidMount.bind(this);
-        this.onRefreshClickHandler = this.onRefreshClickHandler.bind(this);
     }
 
     componentDidMount(){
@@ -56,9 +58,6 @@ class App extends React.Component {
         this.setState({ end: e.target.value })
     }
 
-    onRefreshClickHandler() {
-    }
-
     onChangeTeam(val) {
         this.setState({ team: val});
     }
@@ -83,6 +82,9 @@ class App extends React.Component {
             });
     }
 
+    onClickDate(val){
+        this.setState({pending: {user: val.user, date: val.date }})
+    }
 
     render() {
 
@@ -94,8 +96,30 @@ class App extends React.Component {
                     start:<input type='text' onChange={this.onChangeStart} defaultValue={startDate} />
                     end:<input type='text' onChange={this.onChangeEnd} defaultValue={endDate} />
                     <Filter handleChange={this.onChangeTeam} teams={this.state.teams} />
-                    <DataTable start={this.state.start} end={this.state.end} team={this.state.team} teams={this.state.teams} requests={this.state.requests} />
+                    <Confirmation pending={this.state.pending }/>
+                    <DataTable start={this.state.start} end={this.state.end} team={this.state.team} teams={this.state.teams} requests={this.state.requests} 
+                        handleCellClick={this.onClickDate}  />
+                    <div>
+                        <h3>TODO. Short term:</h3>
+                        <ul>
+                            <li>"Send request" control</li>
+                            <li>Refactor request functions</li>
+                            <li>User identity</li>
+                            <li>Styling</li>
+                            <li>Calendar</li>
+                            <li>Make the app based on ID but not user name</li>
+                        </ul>
+
+                        <h3>Long term:</h3>
+                        <ul>
+                            <li>Approve flow</li>                                
+                            <li>Cancel vacation</li>
+                            <li>Mailing with approval</li>
+                        </ul>
+                    </div>
                 </div>
+
+
             )
 
         }
@@ -106,6 +130,10 @@ class App extends React.Component {
 
 let startDate = '2017-05-01';
 let endDate = '2017-05-21';
+
+
+ReactDOM.render(<App />, document.getElementById('container'));
+
 
 // var teams = [
 //     {
@@ -120,43 +148,16 @@ let endDate = '2017-05-21';
 //     }
 // ]
 
-const requests = [
-    {
-        id: "1546468987987987",
-        "user": "Ilia",
-        "date": "2017-05-02",
-        "status": "approved"
-    }, {
-        id: "278986564651787",
-        "user": "Mykola",
-        "date": "2017/05/03",
-        "status": "created"
-    }
-];
-
-ReactDOM.render(
-    <App data={requests} />, document.getElementById('container'));
-
-/*
- {
-        id: "123",
-        name: "Carbon",
-        members: ["Ilia", "Dmytro", "Alex"]
- }
-
-http://127.0.0.1:5984/vacation/_design/designRequest/_view/request-view?startkey="2017/05/01"&endkey="2017/05/02"
-
-function (doc) {
-  if (doc.user && doc.date){
-    emit(doc.date,{user: doc.user,status: doc.status});
-  }
-}
-
-function (doc) {
-  var member; 
-  if (doc.name && doc.members){
-      emit(doc.name, doc.members);
-  }
-}
-http://127.0.0.1:5984/vacation/_design/teamView/_view/team-view
- */
+// const requests = [
+//     {
+//         id: "1546468987987987",
+//         "user": "Ilia",
+//         "date": "2017-05-02",
+//         "status": "approved"
+//     }, {
+//         id: "278986564651787",
+//         "user": "Mykola",
+//         "date": "2017/05/03",
+//         "status": "created"
+//     }
+// ];

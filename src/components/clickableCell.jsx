@@ -8,10 +8,13 @@ export default class ClickableCell extends React.Component {
     }
     onCellClick(e) {
         let request = e.target.getAttribute('data');
+
         if (this.props.request) {
-            console.log('cell click event. Request attribute id: ' + this.props.request.id);
-            console.log('cell click event. Request attribute status: ' + this.props.request.status);
+            // console.log('cell click event. Request attribute id: ' + this.props.request.id);
+            // console.log('cell click event. Request attribute status: ' + this.props.request.status);
+            return;
         }
+        this.props.onClick({user: this.props.user, date: this.props.date});
     }
     getInnerText() {
         if (this.props.request) {
@@ -21,10 +24,8 @@ export default class ClickableCell extends React.Component {
     }
 
     getClassName() {
-        let className = 'data-table_cell data-table_cell-clickable';
-        if (this.props.request) {
-            className += ' data-table_cell-requested';
-        }
+        let className = 'data-table_cell';
+        className += ((this.props.request) ? ' data-table_cell-requested' :  ' data-table_cell-clickable');
         return className;
     }
 
