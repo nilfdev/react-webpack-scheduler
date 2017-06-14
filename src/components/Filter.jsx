@@ -30,4 +30,14 @@ export default class Filter extends React.Component {
         );
     }
 }
+
 const initialItem = 'All';
+
+
+Filter.propTypes = {
+    teams: (props, propName, componentName) => {
+        if (!props[propName] || props[propName].length < 1) {
+            console.log('Teams array is empty: ' + propName);
+        }
+    }
+};

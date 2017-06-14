@@ -1,5 +1,7 @@
 import DataTable from './src/components/dataTable';
 import Filter from './src/components/filter';
+import {parseTeams, parseRequests} from './src/parsers'
+import {formatParam} from './src/dateServices'
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -10,10 +12,10 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-            requests: props.data, //TODO: DO NOT KNOW WHAT TO USE: props from component
-            teams: teams,         // or props from the page itself
+            requests: [], //TODO: DO NOT KNOW WHAT TO USE: props from component
             start: startDate,
             end: endDate,
+            teams: [],         // or props from the page itself
             team: ''
         };
         this.onChangeStart = this.onChangeStart.bind(this);
@@ -26,20 +28,25 @@ class App extends React.Component {
 
     componentDidMount(){
         console.log('component did mount. Start request');
+        let self = this;
 
-         request
-            .post('http://127.0.0.1:5984/teams/_all_docs?include_docs=true')
+        request
+            .get('http://127.0.0.1:5984/teams/_all_docs?include_docs=true')
             .send({message: this.state.message})
             .accept('application/json')
-          // .withCredentials()
+            //.withCredentials()
             .end(function(err, res){
-            if(err) throw err;
-        
-           // self.setState({ r: res.body.message });
-           //debugger;
-            console.log(res.body.rows);
-        });
-    }
+                if(err) {
+                    throw err;
+                }
+
+                var parsedTeams = parseTeams(res);
+                console.log(parsedTeams);
+                self.setState({teams: parsedTeams});
+            });
+
+            this.requestData();
+      }
 
     onChangeStart(e) {
         this.setState({ start: e.target.value })
@@ -56,6 +63,27 @@ class App extends React.Component {
         this.setState({ team: val});
     }
 
+    requestData(){
+        let self = this;
+                request
+            .get('http://127.0.0.1:5984/requests/_design/request/_view/request-view?startkey="' + formatParam(this.state.start) + '"&endkey="' + formatParam(this.state.end) + '"')
+            .send({message: this.state.message})
+            .accept('application/json')
+            
+            //.withCredentials()
+            .end(function(err, res){
+                
+                if(err) {
+                    console.log('request error: ' + err);
+                    throw err;
+                }
+                var parsedRequests = parseRequests(res);
+                console.log(parsedRequests);
+                self.setState({requests: parsedRequests});
+            });
+    }
+
+
     render() {
 
         if (!this.state.requests) {
@@ -63,8 +91,8 @@ class App extends React.Component {
         } else {
             return (
                 <div>
-                    start:<input type='text' onChange={this.changeStart} defaultValue={startDate} />
-                    end:<input type='text' onChange={this.changeEnd} defaultValue={endDate} />
+                    start:<input type='text' onChange={this.onChangeStart} defaultValue={startDate} />
+                    end:<input type='text' onChange={this.onChangeEnd} defaultValue={endDate} />
                     <Filter handleChange={this.onChangeTeam} teams={this.state.teams} />
                     <DataTable start={this.state.start} end={this.state.end} team={this.state.team} teams={this.state.teams} requests={this.state.requests} />
                 </div>
@@ -79,30 +107,30 @@ class App extends React.Component {
 let startDate = '2017-05-01';
 let endDate = '2017-05-21';
 
-var teams = [
-    {
-        id: "123",
-        name: "Carbon",
-        members: ["Ilia", "Dmytro", "Alex"]
-    },
-    {
-        id: "345",
-        name: "Neon",
-        members: ["Mykola", "Oleksandr", "Vyacheslav"]
-    }
-]
+// var teams = [
+//     {
+//         id: "123",
+//         name: "Carbon",
+//         members: ["Ilia", "Dmytro", "Alex"]
+//     },
+//     {
+//         id: "345",
+//         name: "Neon",
+//         members: ["Mykola", "Oleksandr", "Vyacheslav"]
+//     }
+// ]
 
 const requests = [
     {
         id: "1546468987987987",
-        user: "Ilia",
-        date: "2017-05-02",
-        status: "approved"
+        "user": "Ilia",
+        "date": "2017-05-02",
+        "status": "approved"
     }, {
         id: "278986564651787",
-        user: "Mykola",
-        date: "2017-05-03",
-        status: "created"
+        "user": "Mykola",
+        "date": "2017/05/03",
+        "status": "created"
     }
 ];
 

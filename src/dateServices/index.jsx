@@ -19,6 +19,13 @@ const format = (date) => {
         ("0" + date.getUTCDate()).slice(-2);
 }
 
+const formatParam = (string) => {
+    let date = new Date(string);
+    return date.getUTCFullYear() + '/' +
+        ("0" + (date.getUTCMonth() + 1)).slice(-2) + '/' +
+        ("0" + date.getUTCDate()).slice(-2);
+}
+
   const addDays = (date, days) => {
     var result = new Date(date);
     result.setDate(result.getDate() + days);
@@ -37,4 +44,4 @@ const getDatesBetween = (start, end) => {
     return dates
 }
     
-export {toDate, isWeekend, format, addDays, getDatesBetween};
+export {toDate, isWeekend, format, formatParam, addDays, getDatesBetween};
