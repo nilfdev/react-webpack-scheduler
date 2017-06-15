@@ -1,19 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-
+import { format } from '../dateServices';
 
 export default class Confirmation extends React.Component {
-
     constructor(props) {
         super(props);
-        // this.state = {
-        //     pendingDates: ''
-        // }
-        this.onClick = this.onClick.bind(this);
+
+        this.state = {
+            localPending: []
+        }
+
+        this.onConfirm = this.onConfirm.bind(this);
+        this.onCancel = this.onCancel.bind(this);
     }
-    onClick(e){
+
+    onConfirm(e){
         console.log(e.target);
-        this.props.pending = null;
+        this.props.onConfirm('confirmation text');
+    }
+
+    onCancel(e){
+        this.props.onCancel();
     }
 
     render(){
@@ -22,11 +29,15 @@ export default class Confirmation extends React.Component {
         {
             return <div>please select dates</div>;
         }
-        let confirmtaionString = 'User: ' + this.props.pending.user + ' Date: '  + this.props.pending.date ;
+        let confirmtaionString = [];
+        for (let [i, pending] of this.props.pending.entries()){
+            confirmtaionString.push(<div key={i}>User: {pending.user} date: {pending.date} </div>) ;
+        }
 
         return <div>
             <h3>{confirmtaionString}</h3>
-            <input type='button' onClick={this.onClick} value='confirm'/>
+            <input type='button' onClick={this.onConfirm} value='confirm'/>
+            <input type='button' onClick={this.onCancel} value='cancel'/>
         </div>
     }
 }

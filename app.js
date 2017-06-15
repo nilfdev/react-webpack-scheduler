@@ -2,7 +2,7 @@ import DataTable from './src/components/dataTable';
 import Filter from './src/components/filter';
 import Confirmation from './src/components/confirmation';
 import {parseTeams, parseRequests} from './src/parsers'
-import {formatParam} from './src/dateServices'
+import {format, formatParam} from './src/dateServices'
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -13,10 +13,10 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-            requests: [], //TODO: DO NOT KNOW WHAT TO USE: props from component
+            requests: [],
             start: startDate,
             end: endDate,
-            teams: [],         // or props from the page itself
+            teams: [], 
             team: '',
             pending: []
         };
@@ -24,11 +24,14 @@ class App extends React.Component {
         this.onChangeEnd = this.onChangeEnd.bind(this);
         this.onChangeTeam = this.onChangeTeam.bind(this);
         this.onClickDate = this.onClickDate.bind(this);
+        this.onConfirm = this.onConfirm.bind(this);
+        this.onCancel = this.onCancel.bind(this);
 
         this.componentDidMount = this.componentDidMount.bind(this);
     }
 
     componentDidMount(){
+        //Download only once
         console.log('component did mount. Start request');
         let self = this;
 
@@ -83,9 +86,51 @@ class App extends React.Component {
     }
 
     onClickDate(val){
-        this.setState({pending: {user: val.user, date: val.date }})
+        this.addPending({user: val.user, date: val.date });
     }
 
+    addPending(item){
+        var itemDate = new Date(item.date);
+        let isExists = false;
+
+        for(let stateItem of this.state.pending){
+            if (stateItem.user == item.user && itemDate.getDate() == new Date(stateItem.date).getDate())
+            {
+                isExists = true;
+            }
+        }
+        if (!isExists){
+            let pending= this.state.pending;
+            pending.push({date: formatParam(itemDate), user:item.user, status: 'requested'})
+            this.setState({pending: pending});
+        }
+    }
+
+    onConfirm(val){
+        var self = this;
+        request
+            .post('http://127.0.0.1:5984/requests/_bulk_docs')
+            .send({"docs": this.state.pending})
+            .accept('application/json')
+            
+            //.withCredentials()
+            .end(function(err, res){
+                
+                if(err) {
+                    console.log('request error: ' + err);
+                    throw err;
+                }
+                
+                self.setState({pending: null});   
+                self.requestData();
+            });
+    }
+
+    onCancel(val){
+        this.setState({pending: null});
+        this.requestData();
+    }
+   
     render() {
 
         if (!this.state.requests) {
@@ -96,7 +141,7 @@ class App extends React.Component {
                     start:<input type='text' onChange={this.onChangeStart} defaultValue={startDate} />
                     end:<input type='text' onChange={this.onChangeEnd} defaultValue={endDate} />
                     <Filter handleChange={this.onChangeTeam} teams={this.state.teams} />
-                    <Confirmation pending={this.state.pending }/>
+                    <Confirmation pending={this.state.pending } onConfirm={this.onConfirm} onCancel= {this.onCancel}/>
                     <DataTable start={this.state.start} end={this.state.end} team={this.state.team} teams={this.state.teams} requests={this.state.requests} 
                         handleCellClick={this.onClickDate}  />
                     <div>
@@ -113,6 +158,8 @@ class App extends React.Component {
                         <h3>Long term:</h3>
                         <ul>
                             <li>Approve flow</li>                                
+                            <li>Integrate with time-off</li>                                
+                            <li>Integrate with synergy</li>                                
                             <li>Cancel vacation</li>
                             <li>Mailing with approval</li>
                         </ul>
@@ -126,11 +173,8 @@ class App extends React.Component {
     }
 }
 
-
-
 let startDate = '2017-05-01';
 let endDate = '2017-05-21';
-
 
 ReactDOM.render(<App />, document.getElementById('container'));
 

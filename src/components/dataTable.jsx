@@ -9,7 +9,6 @@ import ClickableCell from './clickableCell';
 import { getDatesBetween } from '../dateServices';
 import { getRequest } from '../requestServices';
 
-
 export default class DataTable extends React.Component {
 
     constructor(props) {
@@ -53,10 +52,10 @@ export default class DataTable extends React.Component {
                 let memberCells = [];
                 for (let i = 0; i < dates.length; i++) {
                     memberCells.push(<ClickableCell key={'mbmCell' + i} val='*' 
-                                    request={getRequest(this.props.requests, member, dates[i])}
-                                    user={member}
-                                    date={dates[i]}
-                                    onClick = {this.props.handleCellClick}>
+                                        request={getRequest(this.props.requests, member, dates[i])}
+                                        user={member}
+                                        date={dates[i]}
+                                        onClick = {this.props.handleCellClick}>
                         </ClickableCell>);
                 }
 
