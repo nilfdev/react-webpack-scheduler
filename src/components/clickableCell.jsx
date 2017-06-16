@@ -10,8 +10,6 @@ export default class ClickableCell extends React.Component {
         let request = e.target.getAttribute('data');
 
         if (this.props.request) {
-            // console.log('cell click event. Request attribute id: ' + this.props.request.id);
-            // console.log('cell click event. Request attribute status: ' + this.props.request.status);
             return;
         }
         e.target.innerText = 'v';

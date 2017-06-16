@@ -37,13 +37,10 @@ export default class DataTable extends React.Component {
         
         const dates = getDatesBetween(this.props.start, this.props.end);
 
-        console.log('Dates:' + dates);
-
         let headerCells = [];
         headerCells.push(<HeaderTextCell key={'hdr_team'} val='Team'></HeaderTextCell>);
         headerCells.push(<HeaderTextCell key={'hdr_person'} val='Person'></HeaderTextCell>);
         for (let i = 0; i < dates.length; i++) {
-             console.log('Cell: ' + dates[i]);
             headerCells.push(<HeaderDateCell key={'hdr' + i} val={dates[i]}></HeaderDateCell>);
         }
 
@@ -100,19 +97,19 @@ export default class DataTable extends React.Component {
 
 const validate = (props, propName, componentName) => {
     if (props[propName]) {
-        console.log('valid property: ' + propName);
+        
     }
 };
 
 DataTable.propTypes = {
     requests: (props, propName, componentName) => {
         if (props[propName].length < 1) {
-            console.log('Array is empty: ' + propName);
+            //TODO: handle exceptions
         }
     },
     teams: (props, propName, componentName) => {
         if (!props[propName] || props[propName].length < 1) {
-            console.log('Do not know what kind of validations I need here, but this is an ERROR: ' + propName);
+            //TODO: handle exceptions
         }
     },
     start: validate,

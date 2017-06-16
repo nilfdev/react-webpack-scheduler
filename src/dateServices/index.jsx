@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 const toDate = (string) => {
-   return moment(string);
+   return moment(string, 'YYYY-MM-DD');
 }
 
 const isWeekend = (string) => {
@@ -28,7 +28,7 @@ const addDays = (date, days) => {
 
 const getDatesBetween = (start, end) => {
     let startDate = toDate(start);
-    let endDate = toDate(end);
+    let endDate =  toDate(end);
 
     let dates = new Array();
     while (startDate && endDate && startDate <= endDate) {

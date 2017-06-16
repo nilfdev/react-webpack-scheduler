@@ -5,11 +5,14 @@ import request from 'superagent';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
+
 import DataTable from './src/components/dataTable';
 import Filter from './src/components/filter';
 import Confirmation from './src/components/confirmation';
 import {parseTeams, parseRequests} from './src/parsers'
 import {format, formatParam} from './src/dateServices'
+
+import {requests} from './src/requests';
 
 class App extends React.Component {
     constructor(props) {

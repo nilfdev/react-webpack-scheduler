@@ -15,7 +15,6 @@ export default class Confirmation extends React.Component {
     }
 
     onConfirm(e){
-        console.log(e.target);
         this.props.onConfirm('confirmation text');
     }
 
