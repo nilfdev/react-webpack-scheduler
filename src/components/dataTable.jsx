@@ -17,8 +17,6 @@ export default class DataTable extends React.Component {
         this.state = {
             request: this.props.requests,
             teams: this.props.teams,
-            start: this.props.start,
-            end: this.props.end,
         }
     }
 
@@ -35,12 +33,17 @@ export default class DataTable extends React.Component {
   
     render() {
         let filteredTeams = this.props.teams.filter(team =>  team.name == this.props.team || !this.props.team);
- 
-        const dates = getDatesBetween(this.state.start, this.state.end);
+
+        
+        const dates = getDatesBetween(this.props.start, this.props.end);
+
+        console.log('Dates:' + dates);
+
         let headerCells = [];
         headerCells.push(<HeaderTextCell key={'hdr_team'} val='Team'></HeaderTextCell>);
         headerCells.push(<HeaderTextCell key={'hdr_person'} val='Person'></HeaderTextCell>);
         for (let i = 0; i < dates.length; i++) {
+             console.log('Cell: ' + dates[i]);
             headerCells.push(<HeaderDateCell key={'hdr' + i} val={dates[i]}></HeaderDateCell>);
         }
 
@@ -50,7 +53,11 @@ export default class DataTable extends React.Component {
             
             for (let [m, member] of team.members.entries()) {
                 let memberCells = [];
+
                 for (let i = 0; i < dates.length; i++) {
+                    
+                    //console.log(format(dates[i]));
+
                     memberCells.push(<ClickableCell key={'mbmCell' + i} val='*' 
                                         request={getRequest(this.props.requests, member, dates[i])}
                                         user={member}

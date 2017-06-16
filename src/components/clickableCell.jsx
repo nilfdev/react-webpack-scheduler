@@ -15,6 +15,7 @@ export default class ClickableCell extends React.Component {
             return;
         }
         e.target.innerText = 'v';
+        
         this.props.onClick({user: this.props.user, date: this.props.date});
     }
     getInnerText() {

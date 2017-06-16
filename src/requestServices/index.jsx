@@ -1,12 +1,10 @@
+  import moment from 'moment';
+
   const getRequest = (requests, teamMember, date)=> {
-        let gridDate = new Date(date);
-
+        let gridDate = moment(date);
         for (let i = 0; i < requests.length; i++) {
-
             if (requests[i].user == teamMember) {
-                let requestDate = new Date(requests[i].date);
-
-                if (requestDate.getDate() == gridDate.getDate()) {
+                if (moment(requests[i].date).isSame(gridDate)) {
                     return requests[i];
                 }
             }
