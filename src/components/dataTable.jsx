@@ -55,9 +55,6 @@ export default class DataTable extends React.Component {
                 let memberCells = [];
 
                 for (let i = 0; i < dates.length; i++) {
-                    
-                    //console.log(format(dates[i]));
-
                     memberCells.push(<ClickableCell key={'mbmCell' + i} val='*' 
                                         request={getRequest(this.props.requests, member, dates[i])}
                                         user={member}

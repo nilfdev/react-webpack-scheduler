@@ -37,6 +37,5 @@ const getDatesBetween = (start, end) => {
     }
     return dates
 }
-
    
 export {toDate, isWeekend, format, formatParam, addDays, getDatesBetween};

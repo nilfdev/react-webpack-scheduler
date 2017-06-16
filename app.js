@@ -17,8 +17,6 @@ class App extends React.Component {
 
         this.state = {
             requests: [],
-            // start: moment(),
-            // end: moment(),
             teams: [], 
             team: '',
             pending: []
@@ -67,8 +65,6 @@ class App extends React.Component {
     }
 
     requestData(){
-        debugger;
-        var a = this.state.start;
         let self = this;
                 request
             .get('http://127.0.0.1:5984/requests/_design/request/_view/request-view?startkey="' + formatParam(this.state.start) + '"&endkey="' + formatParam(this.state.end) + '"')
