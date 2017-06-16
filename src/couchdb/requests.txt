@@ -1,0 +1,17 @@
+{
+  "_id": "_design/request",
+  "_rev": "1-2b1225b00b577ad31448a4b50ff527fc",
+  "views": {
+    "request-view": {
+      "map": "function (doc) {\n  if (doc)\n  emit(doc.date, { user: doc.user, status: doc.status});\n}"
+    }
+  },
+  "language": "javascript"
+}
+{
+  "_id": "b42ee1f0a56cf0ab5e68901ded02fcc7",
+  "_rev": "1-a5d6d2736edf50d1ae0aca614616bf50",
+  "date": "2017/05/31",
+  "user": "Dmytro",
+  "status": "requested"
+}
