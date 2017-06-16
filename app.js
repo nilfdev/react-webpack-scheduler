@@ -12,7 +12,7 @@ import Confirmation from './src/components/confirmation';
 import {parseTeams, parseRequests} from './src/parsers'
 import {format, formatParam} from './src/dateServices'
 
-import {requests} from './src/requests';
+import {Get, Post} from './src/httpRequests';
 
 class App extends React.Component {
     constructor(props) {
@@ -37,30 +37,19 @@ class App extends React.Component {
     }
 
     componentDidMount(){
-      const defaultDate = moment(new Date());
-      this.setState({ start: defaultDate });
-      this.setState({ end: defaultDate });
-
-    
+         const defaultDate = moment(new Date());
+         this.setState({ start: defaultDate });
+         this.setState({ end: defaultDate });
     
         let self = this;
+        Get('http://127.0.0.1:5984/teams/_all_docs?include_docs=true', (res)=>{
+            var parsedTeams = parseTeams(res);
+            self.setState({teams: parsedTeams});
+            self.requestData();
+        });
+        
+    }
 
-        request
-            .get('http://127.0.0.1:5984/teams/_all_docs?include_docs=true')
-            .send({message: this.state.message})
-            .accept('application/json')
-            //.withCredentials()
-            .end(function(err, res){
-                if(err) {
-                    throw err;
-                }
-
-                var parsedTeams = parseTeams(res);
-                self.setState({teams: parsedTeams});
-            });
-
-            this.requestData();
-      }
 
  
     onChangeTeam(val) {
@@ -69,21 +58,12 @@ class App extends React.Component {
 
     requestData(){
         let self = this;
-                request
-            .get('http://127.0.0.1:5984/requests/_design/request/_view/request-view?startkey="' + formatParam(this.state.start) + '"&endkey="' + formatParam(this.state.end) + '"')
-            .send({message: this.state.message})
-            .accept('application/json')
-            
-            //.withCredentials()
-            .end(function(err, res){
-                
-                if(err) {
-                    console.log('request error: ' + err);
-                    throw err;
-                }
-                var parsedRequests = parseRequests(res);
-                self.setState({requests: parsedRequests});
-            });
+        let url = 'http://127.0.0.1:5984/requests/_design/request/_view/request-view?startkey="' + formatParam(this.state.start) + '"&endkey="' + formatParam(this.state.end) + '"'
+        
+        Get(url, (res)=>{
+            var parsedRequests = parseRequests(res);
+            self.setState({requests: parsedRequests});
+        });
     }
 
     onClickDate(val){
