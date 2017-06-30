@@ -33,8 +33,7 @@ export default class DataTable extends React.Component {
   
     render() {
         let filteredTeams = this.props.teams.filter(team =>  team.name == this.props.team || !this.props.team);
-
-        
+      
         const dates = getDatesBetween(this.props.start, this.props.end);
 
         let headerCells = [];

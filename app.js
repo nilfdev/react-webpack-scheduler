@@ -45,9 +45,8 @@ class App extends React.Component {
         Get('http://127.0.0.1:5984/teams/_all_docs?include_docs=true', (res)=>{
             var parsedTeams = parseTeams(res);
             self.setState({teams: parsedTeams});
-            self.requestData();
         });
-        
+        this.requestData();
     }
 
 
